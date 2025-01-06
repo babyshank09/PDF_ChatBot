@@ -19,12 +19,12 @@ st.title("PDF ChatBot")
 st.subheader("Interpret your PDF Files and Chat with it") 
 
 
-def create_vector_embedding(): 
+def create_vector_embedding(openai_api_key): 
     st.session_state.loader= PyPDFDirectoryLoader("pdf_files")  
     st.session_state.docs= st.session_state.loader.load()
     st.session_state.splitter= RecursiveCharacterTextSplitter(chunk_size=200, chunk_overlap=30)  
     st.session_state.final_docs= st.session_state.splitter.split_documents(st.session_state.docs)  
-    st.session_state.embedder= OpenAIEmbeddings()
+    st.session_state.embedder= OpenAIEmbeddings(openai_api_key= openai_api_key)
     st.session_state.vectorstore= FAISS.from_documents(st.session_state.final_docs, embedding=st.session_state.embedder) 
     st.session_state.retriever= st.session_state.vectorstore.as_retriever() 
     
@@ -52,13 +52,12 @@ with st.sidebar:
         st.info("Make sure to embed your documents before proceeding") 
     else:  
         with st.spinner():
-            create_vector_embedding() 
+            create_vector_embedding(openai_api_key) 
             st.success("Vector Embeddings created successfully")  
 
     
-
 if groq_api_key:
-    llm= ChatGroq(groq_api_key= groq_api_key, model="Llama3-8b-8192")      
+    llm= ChatGroq(groq_api_key= groq_api_key, model="Llama3-8b-8192")    
 
 prompt= ChatPromptTemplate.from_template(
     """ 
@@ -79,6 +78,12 @@ if st.button("Submit") and query:
         
         response= retrieval_chain.invoke({"input":query})  
         st.write(response['answer']) 
+
+
+
+
+
+
 
 
 
