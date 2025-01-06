@@ -57,7 +57,8 @@ with st.sidebar:
 
     
 
-llm= ChatGroq(groq_api_key= groq_api_key, model="Llama3-8b-8192")    
+if groq_api_key:
+    llm= ChatGroq(groq_api_key= groq_api_key, model="Llama3-8b-8192")      
 
 prompt= ChatPromptTemplate.from_template(
     """ 
