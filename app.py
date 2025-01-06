@@ -22,7 +22,7 @@ st.subheader("Interpret your PDF Files and Chat with it")
 def create_vector_embedding(openai_api_key): 
     st.session_state.loader= PyPDFDirectoryLoader("pdf_files")  
     st.session_state.docs= st.session_state.loader.load()
-    st.session_state.splitter= RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=80)  
+    st.session_state.splitter= RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=150)  
     st.session_state.final_docs= st.session_state.splitter.split_documents(st.session_state.docs)  
     st.session_state.embedder= OpenAIEmbeddings(openai_api_key= openai_api_key)
     st.session_state.vectorstore= FAISS.from_documents(st.session_state.final_docs, embedding=st.session_state.embedder) 
